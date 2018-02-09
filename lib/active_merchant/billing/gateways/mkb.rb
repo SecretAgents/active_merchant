@@ -276,6 +276,16 @@ module ActiveMerchant #:nodoc:
           # TODO: lookup error code for this response
         end
       end
+
+      def handle_response(response)
+        if (200...300).include?(response.code.to_i)
+          return response.body
+        elsif 302 == response.code.to_i
+          url = (test? ? test_url : live_url)
+          return ssl_get(URI.parse("#{url}#{response['location']}"))
+        end
+        raise ResponseError.new(response)
+      end
     end
   end
 end
