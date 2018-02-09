@@ -8,8 +8,8 @@ module ActiveMerchant #:nodoc:
       self.test_url = 'https://mpi.mkb.ru:9443/MPI_payment/'
       self.live_url = 'https://mpi.mkb.ru/MPI_payment/'
 
-      self.action_test_url = 'https://ts-ecomweb-test.mcb.ru/SENTRY/PaymentGateway/Application/FinancialProcessing.aspx'
-      self.action_live_url = 'https://ts-ecomweb.mcb.ru/SENTRY/PaymentGateway/Application/FinancialProcessing.aspx'
+      self.action_test_url = 'https://mpi.mkb.ru:9443/finoperate/dofinancialoperationservlet'
+      self.action_live_url = 'https://mpi.mkb.ru:8443/finoperate/dofinancialoperationservlet'
 
       self.status_test_url = 'https://mpi.mkb.ru:9443/finoperate/dogetorderstatusservlet'
       self.status_live_url = 'https://mpi.mkb.ru:8443/finoperate/dogetorderstatusservlet'
@@ -275,6 +275,16 @@ module ActiveMerchant #:nodoc:
         unless success_from(response)
           # TODO: lookup error code for this response
         end
+      end
+
+      def handle_response(response)
+        if (200...300).include?(response.code.to_i)
+          return response.body
+        elsif 302 == response.code.to_i
+          url = (test? ? test_url : live_url)
+          return ssl_get(URI.parse("#{url}#{response['location']}"))
+        end
+        raise ResponseError.new(response)
       end
     end
   end
