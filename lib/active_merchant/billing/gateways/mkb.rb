@@ -221,9 +221,10 @@ module ActiveMerchant #:nodoc:
       def successful?(response, action)
         case action
           when 'mpi_payment'
-            if response.css("title")[0]
-              response.css("title")[0].text == 'MKB payment'
-            end
+            # if response.css("title")[0]
+            #   response.css("title")[0].text == 'MKB payment'
+            # end
+            true
           when 'reverse', 'refund'
             response['ResponseCode'] == '1' && response['ReasonCode'] == '1'
           when 'capture'
