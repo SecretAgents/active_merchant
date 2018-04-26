@@ -4,7 +4,7 @@ module ActiveMerchant #:nodoc:
 
       self.display_name        = 'Alfabank'
       self.homepage_url        = 'http://www.alfabank.ru'
-      self.live_url            = 'https://engine.paymentgate.ru/payment/rest'
+      self.live_url            = 'https://pay.alfabank.ru/payment/rest'
       self.money_format        = :cents
       self.ssl_strict          = false
       self.supported_cardtypes = [:visa, :master]
